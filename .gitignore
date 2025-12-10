@@ -15,7 +15,7 @@
 *.classpath
 *.project
 *.settings/
-
+C*.md
 # Eclipse
 .project
 .classpath
