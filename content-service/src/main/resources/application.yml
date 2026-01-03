@@ -1,9 +1,13 @@
 spring:
   application:
     name: content-service
+  config:
+    import: "classpath:/common-application.yml"
   datasource:
-    url: jdbc:postgresql://ep-lingering-rain-ahbp23u9-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${apiforge.datasource.host}/${apiforge.datasource.db-name}?${apiforge.datasource.params}
+    username: ${apiforge.datasource.username}
+    password: ${apiforge.datasource.password}
+    driver-class-name: ${apiforge.datasource.driver-class-name}
   profiles:
     active: dev
 server:

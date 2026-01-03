@@ -56,5 +56,7 @@ spring-boot-devtools.properties
 
 application-dev.yml
 application-prod.yml
+common-application-dev.yml
+.run/
 
 *.txt
