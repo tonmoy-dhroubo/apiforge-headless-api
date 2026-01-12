@@ -11,6 +11,6 @@ spring:
   profiles:
     active: dev
 server:
-  port: 8084
+  port: 7084
 file:
   upload-dir: ./uploads

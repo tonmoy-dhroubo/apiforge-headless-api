@@ -7,14 +7,16 @@ LOG_DIR="$ROOT/.run/logs"
 SERVICES=(api-gateway auth-service content-service content-type-service media-service permission-service)
 
 if [ ! -d "$PID_DIR" ]; then
-  echo "No PID directory found at $PID_DIR"
+  echo "No running services found (missing $PID_DIR)."
   exit 0
 fi
+
+printf "\nApiforge Spring service status\n\n"
 
 for s in "${SERVICES[@]}"; do
   pid_file="$PID_DIR/$s.pid"
   if [ ! -f "$pid_file" ]; then
-    echo "$s: not running"
+    printf "%-24s %s\n" "$s" "not running"
     continue
   fi
 
@@ -22,11 +24,11 @@ for s in "${SERVICES[@]}"; do
   if kill -0 "$pid" 2>/dev/null; then
     log_file="$LOG_DIR/$s.log"
     if [ -f "$log_file" ]; then
-      echo "$s: running (pid $pid, log $log_file)"
+      printf "%-24s %s\n" "$s" "running (pid $pid, log $log_file)"
     else
-      echo "$s: running (pid $pid)"
+      printf "%-24s %s\n" "$s" "running (pid $pid)"
     fi
   else
-    echo "$s: stale pid $pid"
+    printf "%-24s %s\n" "$s" "stale pid $pid"
   fi
 done

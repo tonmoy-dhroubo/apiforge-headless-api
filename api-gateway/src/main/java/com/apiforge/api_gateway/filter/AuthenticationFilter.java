@@ -29,7 +29,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     public AuthenticationFilter(
             JwtUtil jwtUtil,
             WebClient.Builder webClientBuilder,
-            @Value("${apiforge.permission-service-url:http://localhost:8085}") String permissionServiceUrl) {
+            @Value("${apiforge.permission-service-url:http://localhost:7085}") String permissionServiceUrl) {
         super(Config.class);
         this.jwtUtil = jwtUtil;
         this.webClientBuilder = webClientBuilder;

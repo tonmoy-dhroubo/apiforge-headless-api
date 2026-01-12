@@ -11,6 +11,6 @@ spring:
   profiles:
     active: dev
 server:
-  port: 8083
+  port: 7083
 content-type-service:
-  url: http://localhost:8082
+  url: http://localhost:7082

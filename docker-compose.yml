@@ -31,12 +31,12 @@ services:
       JWT_SECRET: apiforge-headless-cms-secret-key-minimum-256-bits-required-for-hs256
       JWT_REFRESH_SECRET: apiforge-headless-cms-refresh-secret-key-minimum-256-bits-required
     ports:
-      - "8080:8080"
-      - "8081:8081"
-      - "8082:8082"
-      - "8083:8083"
-      - "8084:8084"
-      - "8085:8085"
+      - "7080:7080"
+      - "7081:7081"
+      - "7082:7082"
+      - "7083:7083"
+      - "7084:7084"
+      - "7085:7085"
     volumes:
       - uploads:/app/uploads
     depends_on:

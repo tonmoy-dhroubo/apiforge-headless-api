@@ -7,4 +7,4 @@ spring:
     active: dev
 
 apiforge:
-  permission-service-url: http://localhost:8085
+  permission-service-url: http://localhost:7085

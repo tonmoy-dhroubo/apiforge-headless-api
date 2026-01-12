@@ -6,14 +6,16 @@ PID_DIR="$ROOT/.run/pids"
 SERVICES=(api-gateway auth-service content-service content-type-service media-service permission-service)
 
 if [ ! -d "$PID_DIR" ]; then
-  echo "No PID directory found at $PID_DIR"
+  echo "No running services found (missing $PID_DIR)."
   exit 0
 fi
+
+printf "\nStopping Apiforge Spring services\n\n"
 
 for s in "${SERVICES[@]}"; do
   pid_file="$PID_DIR/$s.pid"
   if [ ! -f "$pid_file" ]; then
-    echo "$s: no pid file"
+    printf "%-24s %s\n" "$s" "not running"
     continue
   fi
 
@@ -30,9 +32,9 @@ for s in "${SERVICES[@]}"; do
     if kill -0 "$pid" 2>/dev/null; then
       kill -9 "$pid" || true
     fi
-    echo "$s: stopped"
+    printf "%-24s %s\n" "$s" "stopped"
   else
-    echo "$s: pid $pid not running"
+    printf "%-24s %s\n" "$s" "stale pid $pid"
   fi
 
   rm -f "$pid_file"

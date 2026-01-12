@@ -8,6 +8,24 @@ SERVICES=(api-gateway auth-service content-service content-type-service media-se
 
 mkdir -p "$PID_DIR" "$LOG_DIR"
 
+usage() {
+  cat <<'EOF'
+Usage: ./run-all.sh [--skip-build]
+
+Starts all Apiforge Spring services and writes logs to ./.run/logs.
+Use SKIP_BUILD=1 or --skip-build to skip the Maven build.
+EOF
+}
+
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+  usage
+  exit 0
+fi
+
+if [ "${1:-}" = "--skip-build" ]; then
+  SKIP_BUILD=1
+fi
+
 if [ ! -x "$ROOT/mvnw" ]; then
   chmod +x "$ROOT/mvnw"
 fi
@@ -27,10 +45,16 @@ SPRING_DATASOURCE_USERNAME="${SPRING_DATASOURCE_USERNAME:-$DEFAULT_DB_USERNAME}"
 SPRING_DATASOURCE_PASSWORD="${SPRING_DATASOURCE_PASSWORD:-$DEFAULT_DB_PASSWORD}"
 SPRING_DATASOURCE_DRIVER_CLASS_NAME="${SPRING_DATASOURCE_DRIVER_CLASS_NAME:-org.postgresql.Driver}"
 
+printf "\nApiforge Spring services\n"
+printf "Logs: %s\n" "$LOG_DIR"
+printf "Status: ./status-all.sh | Stop: ./stop-all.sh\n\n"
+
 if [ "${SKIP_BUILD:-0}" != "1" ]; then
   services_csv="$(IFS=,; echo "${SERVICES[*]}")"
-  echo "Building services: $services_csv"
+  echo "Building services: $services_csv (set SKIP_BUILD=1 to skip)"
   "$ROOT/mvnw" -q -DskipTests -pl "$services_csv" -am clean package
+else
+  echo "Skipping build (SKIP_BUILD=1)"
 fi
 
 is_running() {
@@ -44,7 +68,7 @@ is_running() {
 for s in "${SERVICES[@]}"; do
   pid_file="$PID_DIR/$s.pid"
   if is_running "$pid_file"; then
-    echo "$s: already running (pid $(cat "$pid_file"))"
+    printf "%-24s %s\n" "$s" "already running (pid $(cat "$pid_file"))"
     continue
   fi
 
@@ -55,5 +79,5 @@ for s in "${SERVICES[@]}"; do
   SPRING_DATASOURCE_DRIVER_CLASS_NAME="$SPRING_DATASOURCE_DRIVER_CLASS_NAME" \
   nohup "$ROOT/mvnw" -q -pl "$s" spring-boot:run >"$log_file" 2>&1 &
   echo $! >"$pid_file"
-  echo "$s: started (pid $(cat "$pid_file"))"
+  printf "%-24s %s\n" "$s" "started (pid $(cat "$pid_file"), log $log_file)"
 done

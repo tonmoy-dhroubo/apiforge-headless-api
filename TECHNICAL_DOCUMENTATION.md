@@ -32,26 +32,26 @@ Key runtime processes:
 ### 2.1 Service Inventory and Ports
 All services use the same PostgreSQL database configured via shared properties. Default local ports:
 
-- API Gateway: `8080` (inferred from Postman collection base URL)
-- Auth Service: `8081` (`auth-service/src/main/resources/application.yml`)
-- Content Type Service: `8082` (`content-type-service/src/main/resources/application.yml`)
-- Content Service: `8083` (`content-service/src/main/resources/application.yml`)
-- Media Service: `8084` (`media-service/src/main/resources/application.yml`)
-- Permission Service: `8085` (`permission-service/src/main/resources/application.yml`)
+- API Gateway: `7080` (inferred from Postman collection base URL)
+- Auth Service: `7081` (`auth-service/src/main/resources/application.yml`)
+- Content Type Service: `7082` (`content-type-service/src/main/resources/application.yml`)
+- Content Service: `7083` (`content-service/src/main/resources/application.yml`)
+- Media Service: `7084` (`media-service/src/main/resources/application.yml`)
+- Permission Service: `7085` (`permission-service/src/main/resources/application.yml`)
 
 ### 2.2 High-Level Request Flow
-1. Client calls the API Gateway at `http://localhost:8080/...`.
+1. Client calls the API Gateway at `http://localhost:7080/...`.
 2. `AuthenticationFilter` in the gateway validates JWT and enriches headers with user claims.
 3. Gateway routes traffic to the target service based on path prefix.
 4. Service handles request and persists data in PostgreSQL.
 
 ### 2.3 Gateway Routing
 `api-gateway/src/main/java/com/apiforge/api_gateway/config/GatewayConfig.java`
-- `/api/auth/**` -> `auth-service:8081` (no JWT check on login/register)
-- `/api/content-types/**` -> `content-type-service:8082` (JWT required)
-- `/api/content/**` -> `content-service:8083` (JWT required)
-- `/api/media/**` -> `media-service:8084` (JWT required, but service allows public file reads)
-- `/api/permissions/**` -> `permission-service:8085` (JWT required)
+- `/api/auth/**` -> `auth-service:7081` (no JWT check on login/register)
+- `/api/content-types/**` -> `content-type-service:7082` (JWT required)
+- `/api/content/**` -> `content-service:7083` (JWT required)
+- `/api/media/**` -> `media-service:7084` (JWT required, but service allows public file reads)
+- `/api/permissions/**` -> `permission-service:7085` (JWT required)
 
 ### 2.4 Authentication and Propagation
 `api-gateway/src/main/java/com/apiforge/api_gateway/filter/AuthenticationFilter.java`
@@ -388,7 +388,7 @@ These modules are assembled via the root `pom.xml` and are run together using `r
 ### 10.2 Local Runtime Context
 All services share a PostgreSQL database defined in `common` config. The credentials are in repo config files and are used by all services in dev profile. Any developer should confirm that the configured database is reachable, otherwise some endpoints will fail at runtime.
 
-Services default to `dev` profile (see application.yml per module). The content-service calls content-type-service by URL `http://localhost:8082` (see `content-service/src/main/resources/application.yml`). This means you must run content-type-service if you want content CRUD to work.
+Services default to `dev` profile (see application.yml per module). The content-service calls content-type-service by URL `http://localhost:7082` (see `content-service/src/main/resources/application.yml`). This means you must run content-type-service if you want content CRUD to work.
 
 ### 10.3 Build and Run
 Use `run-all.sh` to build and start all services.
@@ -532,11 +532,11 @@ The API Gateway is the first hop for external requests. It is responsible for:
 File: `api-gateway/src/main/java/com/apiforge/api_gateway/config/GatewayConfig.java`
 
 Routes are declared explicitly:
-- `/api/auth/**` -> `http://localhost:8081`
-- `/api/content-types/**` -> `http://localhost:8082`
-- `/api/content/**` -> `http://localhost:8083`
-- `/api/media/**` -> `http://localhost:8084`
-- `/api/permissions/**` -> `http://localhost:8085`
+- `/api/auth/**` -> `http://localhost:7081`
+- `/api/content-types/**` -> `http://localhost:7082`
+- `/api/content/**` -> `http://localhost:7083`
+- `/api/media/**` -> `http://localhost:7084`
+- `/api/permissions/**` -> `http://localhost:7085`
 
 Routes other than `/api/auth/**` and public media file paths apply `AuthenticationFilter`.
 
@@ -575,7 +575,7 @@ Every downstream service has a permissive security configuration (all requests p
 However, it comes with an assumption: all requests must go through the gateway. If a developer hits a service directly, they bypass authentication and authorization.
 
 ### 12.5 Local Testing Behavior
-If you bypass the gateway and call services directly (e.g., `localhost:8083`), no JWT validation occurs because the services are configured with `.permitAll()`. This is important in local testing and is also a security risk if services are exposed directly in production.
+If you bypass the gateway and call services directly (e.g., `localhost:7083`), no JWT validation occurs because the services are configured with `.permitAll()`. This is important in local testing and is also a security risk if services are exposed directly in production.
 
 ### 12.6 Extending the Gateway
 Common extensions include:
@@ -1872,27 +1872,27 @@ apiforge:
 ### 33.2 Auth Service Config
 `auth-service/src/main/resources/application.yml`:
 - Datasource URL uses `apiforge.datasource` values.
-- Port 8081.
+- Port 7081.
 - JWT secret configuration.
 
 ### 33.3 Content Type Service Config
 `content-type-service/src/main/resources/application.yml`:
-- Port 8082.
+- Port 7082.
 - Imports common config.
 
 ### 33.4 Content Service Config
 `content-service/src/main/resources/application.yml`:
-- Port 8083.
-- Has `content-type-service.url: http://localhost:8082`.
+- Port 7083.
+- Has `content-type-service.url: http://localhost:7082`.
 
 ### 33.5 Media Service Config
 `media-service/src/main/resources/application.yml`:
-- Port 8084.
+- Port 7084.
 - `file.upload-dir`.
 
 ### 33.6 Permission Service Config
 `permission-service/src/main/resources/application.yml`:
-- Port 8085.
+- Port 7085.
 
 ---
 

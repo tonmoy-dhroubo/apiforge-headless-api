@@ -39,5 +39,5 @@ RUN chmod +x /app/docker-entrypoint.sh && chown appuser:appuser /app/docker-entr
 
 USER appuser
 
-EXPOSE 8080 8081 8082 8083 8084 8085
+EXPOSE 7080 7081 7082 7083 7084 7085
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

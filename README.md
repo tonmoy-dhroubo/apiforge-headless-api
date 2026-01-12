@@ -8,7 +8,7 @@ Run the full stack (Postgres + all services in one container):
 docker compose up --build
 ```
 
-Gateway: `http://localhost:8080`
+Gateway: `http://localhost:7080`
 
 ## Local (no Docker)
 
