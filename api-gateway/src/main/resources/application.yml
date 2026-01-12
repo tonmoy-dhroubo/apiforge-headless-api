@@ -5,6 +5,8 @@ spring:
     web-application-type: reactive
   profiles:
     active: dev
+server:
+  port: 7080
 
 apiforge:
   permission-service-url: http://localhost:7085
