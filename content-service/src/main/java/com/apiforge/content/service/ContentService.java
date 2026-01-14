@@ -18,11 +18,11 @@ public class ContentService {
     @Autowired
     private ContentTypeClientService contentTypeClientService;
 
-    public Map<String, Object> createContent(String apiId, Map<String, Object> data) {
+    public Map<String, Object> createContent(String apiId, Map<String, Object> contentData) {
         ensureContentTypeExists(apiId);
 
         String tableName = "ct_" + apiId;
-        return dynamicContentRepository.create(tableName, data);
+        return dynamicContentRepository.create(tableName, contentData);
     }
 
     public List<Map<String, Object>> getAllContent(String apiId) {
@@ -45,17 +45,19 @@ public class ContentService {
         String tableName = "ct_" + apiId;
         Map<String, Object> content = dynamicContentRepository.findById(tableName, id);
         if (content == null) {
-            throw new CustomExceptions.ResourceNotFoundException("Content not found");
+            throw new CustomExceptions.ResourceNotFoundException(
+                    "Content not found for apiId " + apiId + " and id " + id
+            );
         }
         return content;
     }
 
     @Transactional
-    public Map<String, Object> updateContent(String apiId, Long id, Map<String, Object> data) {
+    public Map<String, Object> updateContent(String apiId, Long id, Map<String, Object> contentData) {
         getContentById(apiId, id);
         
         String tableName = "ct_" + apiId;
-        return dynamicContentRepository.update(tableName, id, data);
+        return dynamicContentRepository.update(tableName, id, contentData);
     }
 
     @Transactional

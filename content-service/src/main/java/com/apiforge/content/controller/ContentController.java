@@ -22,8 +22,8 @@ public class ContentController {
     @PostMapping
     public ResponseEntity<ApiResponse<Map<String, Object>>> createContent(
             @PathVariable String apiId,
-            @RequestBody Map<String, Object> data) {
-        Map<String, Object> created = contentService.createContent(apiId, data);
+            @RequestBody Map<String, Object> contentPayload) {
+        Map<String, Object> created = contentService.createContent(apiId, contentPayload);
         return ResponseEntity.ok(ApiResponse.success("Content created successfully", created));
     }
 
@@ -90,8 +90,8 @@ public class ContentController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> updateContent(
             @PathVariable String apiId,
             @PathVariable Long id,
-            @RequestBody Map<String, Object> data) {
-        Map<String, Object> updated = contentService.updateContent(apiId, id, data);
+            @RequestBody Map<String, Object> contentPayload) {
+        Map<String, Object> updated = contentService.updateContent(apiId, id, contentPayload);
         return ResponseEntity.ok(ApiResponse.success("Content updated successfully", updated));
     }
 
