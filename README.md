@@ -1,6 +1,15 @@
 # apiforge-headless-api
 Headless CMS using Spring Boot
 
+UI repo: https://github.com/tonmoy-dhroubo/apiforge-ui
+
+## UI Screenshots
+
+![Dashboard](docs/screenshots/dashboard.png)
+![Content Types](docs/screenshots/content-types.png)
+![Content Entry](docs/screenshots/content-entry.png)
+![Permissions Matrix](docs/screenshots/permissions.png)
+
 ## Docker
 
 Run the full stack (Postgres + all services in one container):
